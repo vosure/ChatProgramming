@@ -9,19 +9,21 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField textName;
+	private JTextField textIpAddress;
+	private JTextField textPort;
 
 	public Login() {
+		setTitle("Login");
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -38,42 +40,53 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		textField = new JTextField();
-		textField.setBounds(65, 36, 188, 27);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		textName = new JTextField();
+		textName.setBounds(65, 36, 188, 27);
+		contentPane.add(textName);
+		textName.setColumns(10);
 
-		JLabel lblName = new JLabel("Name:");
-		lblName.setFont(new Font("Constantia", Font.BOLD | Font.ITALIC, 16));
-		lblName.setBounds(129, 11, 61, 14);
-		contentPane.add(lblName);
+		JLabel labelName = new JLabel("Name:");
+		labelName.setBounds(129, 21, 61, 14);
+		labelName.setFont(new Font("Constantia", Font.BOLD | Font.ITALIC, 16));
+		contentPane.add(labelName);
 
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(65, 121, 188, 27);
-		contentPane.add(textField_1);
+		textIpAddress = new JTextField();
+		textIpAddress.setBounds(65, 121, 188, 27);
+		textIpAddress.setColumns(10);
+		contentPane.add(textIpAddress);
 
-		JLabel lblIp = new JLabel("IP - Address:");
-		lblIp.setFont(new Font("Constantia", Font.BOLD | Font.ITALIC, 16));
-		lblIp.setBounds(111, 96, 97, 14);
-		contentPane.add(lblIp);
+		JLabel labelIpAddress = new JLabel("IP Address:");
+		labelIpAddress.setBounds(117, 104, 97, 14);
+		labelIpAddress.setFont(new Font("Constantia", Font.BOLD | Font.ITALIC, 16));
+		contentPane.add(labelIpAddress);
 
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(65, 210, 188, 27);
-		contentPane.add(textField_2);
+		textPort = new JTextField();
+		textPort.setBounds(65, 203, 188, 27);
+		textPort.setColumns(10);
+		contentPane.add(textPort);
 
-		JLabel lblPort = new JLabel("Port:");
-		lblPort.setFont(new Font("Constantia", Font.BOLD | Font.ITALIC, 16));
-		lblPort.setBounds(129, 185, 61, 14);
-		contentPane.add(lblPort);
+		JLabel labelPort = new JLabel("Port:");
+		labelPort.setBounds(129, 186, 61, 14);
+		labelPort.setFont(new Font("Constantia", Font.BOLD | Font.ITALIC, 16));
+		contentPane.add(labelPort);
 
-		JButton btnNewButton = new JButton("Login");
-		btnNewButton.setFont(new Font("Century Schoolbook", Font.BOLD, 13));
-		btnNewButton.setBounds(78, 285, 163, 27);
-		contentPane.add(btnNewButton);
+		JButton buttonLogin = new JButton("Login");
+		buttonLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				login(textName.getText(), textIpAddress.getText(), Integer.parseInt(textPort.getText()));
+			}
+
+		});
+		buttonLogin.setBounds(10, 316, 299, 27);
+		buttonLogin.setFont(new Font("Century Schoolbook", Font.BOLD, 13));
+		contentPane.add(buttonLogin);
 	}
 
+	private void login(String name, String address, int port) {
+		dispose();
+		new Client(name, address, port);
+	}
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
