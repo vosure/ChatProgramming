@@ -47,16 +47,18 @@ public class Client extends JFrame {
 		this.address = address;
 		this.port = port;
 
-		if (!openConnection(address, port)) {
+		if (!openConnection(address)) {
 			System.err.println("Connection Failed");
-			send("Connection Failed");
+			printIntoConsole("Connection Failed");
 			return;
 		}
 
 		createWindow();
+		String connectionInfo = "/c/" + name;
+		send(connectionInfo.getBytes());
 	}
 
-	private boolean openConnection(String address, int port) {
+	private boolean openConnection(String address) {
 		try {
 			socket = new DatagramSocket();
 			ip = InetAddress.getByName(address);
@@ -80,7 +82,7 @@ public class Client extends JFrame {
 		return message;
 	}
 
-	private void send(final byte[] data) {
+	private void send(byte[] data) {
 		send = new Thread("Send") {
 			public void run() {
 				DatagramPacket packet = new DatagramPacket(data, data.length, ip, port);
@@ -91,9 +93,7 @@ public class Client extends JFrame {
 				}
 			}
 		};
-
 		send.start();
-
 	}
 
 	private void createWindow() {
@@ -136,7 +136,7 @@ public class Client extends JFrame {
 		messageField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent event) {
 				if (event.getKeyCode() == KeyEvent.VK_ENTER)
-					send(messageField.getText());
+					printIntoConsole(messageField.getText());
 			}
 		});
 		GridBagConstraints gbc_textFieldMessage = new GridBagConstraints();
@@ -152,7 +152,7 @@ public class Client extends JFrame {
 		buttonSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				String message = messageField.getText();
-				send(message);
+				printIntoConsole(message);
 
 			}
 		});
@@ -166,11 +166,12 @@ public class Client extends JFrame {
 		messageField.requestFocusInWindow();
 	}
 
-	private void send(String message) {
+	private void printIntoConsole(String message) {
 		if (message.equals(""))
 			return;
 		message = name + ": " + message;
 		console(message);
+		send(message.getBytes());
 		messageField.setText("");
 	}
 

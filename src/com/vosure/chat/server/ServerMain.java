@@ -8,7 +8,6 @@ public class ServerMain{
 	ServerMain(int port) {
 		this.port = port;
 		server = new Server(port);
-		System.out.println(port);
 	}
 	
 	public static void main(String[] args) {
