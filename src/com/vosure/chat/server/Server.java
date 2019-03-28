@@ -36,7 +36,7 @@ public class Server implements Runnable {
 		running = true;
 		System.out.println("Server running on port: " + port);
 		manage();
-		recieve();
+		receive();
 	}
 
 	public void manage() {
@@ -49,7 +49,7 @@ public class Server implements Runnable {
 		manage.start();
 	}
 
-	public void recieve() {
+	public void receive() {
 		recieve = new Thread("Recieve") {
 			public void run() {
 				while (running) {
@@ -97,16 +97,15 @@ public class Server implements Runnable {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+
 		if (string.startsWith("/c/")) {
 			clients.add(new ServerClient(string.substring(3, string.length()), packet.getAddress(), packet.getPort()));
-			System.out.println(string.substring(3, string.length()));
-
+			String ID = "/c/" + clients.get(clients.size() - 1).getID() + "/e/";
+			send(ID.getBytes(), packet.getAddress(), packet.getPort());
 		} else if (string.startsWith("/m/")) {
-			sendToAll(string);
+			sendToAll(string + "/e/");
 		} else {
 			System.out.println(string);
 		}
-
 	}
-
 }

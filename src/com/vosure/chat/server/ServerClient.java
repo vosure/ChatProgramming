@@ -6,7 +6,7 @@ public class ServerClient {
 	public String name;
 	public InetAddress address;
 	public int port;
-	static private int ID = 0;
+	static private int ID = 0; // TODO(vosure): Create a Unique RNG;
 	public int attempt = 0;
 	
 	ServerClient(String name, InetAddress address, int port){
