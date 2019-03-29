@@ -1,36 +1,18 @@
 package com.vosure.chat;
 
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.DefaultCaret;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class Client{
 	private String name;
 	private String address;
 	private int port;
 	
-	private int ID = -1;
+	private int ID;
 	
 	private DatagramSocket socket;
 	private InetAddress ip;
@@ -67,7 +49,10 @@ public class Client{
 		try {
 			socket = new DatagramSocket();
 			ip = InetAddress.getByName(address);
-		} catch (Exception e) {
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return false;
+		} catch (SocketException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -83,12 +68,13 @@ public class Client{
 			e.printStackTrace();
 		}
 		
-		String message = null;
-		try {
-			message = new String(packet.getData(), 0, packet.getLength(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		String message = new String(packet.getData()).trim();
+//		String message = null;
+//		try {
+//			message = new String(packet.getData(), 0, packet.getLength(), "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
 		return message;
 	}
 
@@ -104,6 +90,16 @@ public class Client{
 			}
 		};
 		send.start();
+	}
+	
+	public void close() {
+		new Thread() {
+			public void run() {
+				synchronized(socket){
+					socket.close();
+				}
+			}
+		}.start();
 	}
 
 }
